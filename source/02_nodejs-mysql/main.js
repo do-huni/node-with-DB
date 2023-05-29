@@ -6,6 +6,15 @@ var qs = require('querystring');
 var template = require('./lib/template.js');
 var path = require('path');
 var sanitizeHtml = require('sanitize-html');
+var mysql = require('mysql');
+
+var db = mysql.createConnection({
+	host:'localhost',
+	user:'orangNLP',
+	password:'ehgns016295',
+	database:'opentutorials'
+});
+db.connect();
 
 var app = http.createServer(function(request, response) {
     var _url = request.url;
@@ -14,17 +23,28 @@ var app = http.createServer(function(request, response) {
 
     if(pathname === '/') {
         if(queryData.id === undefined) {
-            fs.readdir('./data', function(error, filelist) {
-                var title = 'Welcome';
-                var description = 'Hello, Node.js';
-                var list = template.list(filelist);
-                var html = template.HTML(title, list,
-                    `<h2>${title}</h2><p>${description}</p>`,
-                    `<a href="/create">create</a>`
-                );
-                response.writeHead(200);
-                response.end(html);
-            });
+			db.query(`SELECT * FROM topic`, function(error, topics){
+				console.log(topics);
+				var title = "Temp";
+				var description = "Temp Description";
+				var list = template.list(topics);
+				var body = `<h2>${title}</h2>${description}`;
+				var control = `<a href = "/create>create</a>`
+				var html = template.HTML(title, list, body, control);
+				response.writeHead(200);				
+				response.end(html);
+			})
+            // fs.readdir('./data', function(error, filelist) {
+            //     var title = 'Welcome';
+            //     var description = 'Hello, Node.js';
+            //     var list = template.list(filelist);
+            //     var html = template.HTML(title, list,
+            //         `<h2>${title}</h2><p>${description}</p>`,
+            //         `<a href="/create">create</a>`
+            //     );
+            //     response.writeHead(200);
+            //     response.end(html);
+            // });
         } else {
             fs.readdir('./data', function(error, filelist) {
                 var filteredId = path.parse(queryData.id).base;
