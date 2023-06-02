@@ -42,5 +42,41 @@ module.exports = {
 			${tag}
 		</select>
 		`
+	},
+	authorsTable:function(authors){
+		var i = 0;
+		var resultTable = '<table>';
+		while( i < authors.length ){
+			resultTable += `
+			<tr>
+			<td>${authors[i].name}</td>
+			<td>${authors[i].profile}</td>
+			<td>
+				 <a href = "/author/update?id=${authors[i].id}">update</a>
+			</td>
+			<td>
+				<form action="author/delete_process" method="post">
+					<input type= "hidden" name ="id" value = "${authors[i].id}">
+					<input type= "submit" value="delete">						
+				</form>			
+			</td>
+			`;
+			i++;
+		}
+		resultTable += '</table>';
+		return resultTable;
+	},
+	authorStyle:function(){
+		return `
+		<style>
+			table {
+			border: 1px solid black;
+			border-collapse: collapse;			
+			}
+			td{
+			border: 1px solid black;
+			}
+		</style>
+		`;
 	}
 }
