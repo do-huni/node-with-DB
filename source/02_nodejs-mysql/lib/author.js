@@ -85,7 +85,6 @@ exports.update_process = function(request, response){
 	});
 	request.on('end', function(){
 		var post = qs.parse(body);
-		console.log(body);
 		var tempQuery = `		
 			UPDATE author SET name = ?, profile = ? WHERE id = ?
 		`;
